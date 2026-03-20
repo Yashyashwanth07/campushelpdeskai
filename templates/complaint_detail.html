@@ -1,0 +1,158 @@
+{% extends 'base.html' %}
+{% block title %}Complaint #{{ complaint.id }} â€” SmartCampus AI{% endblock %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <!-- Complaint Card -->
+                <div class="card border-0 shadow-lg glass-card mb-4">
+                    <div class="card-body p-4">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <div>
+                                <span class="badge bg-{{ complaint.status_color() }} rounded-pill me-2">
+                                    {{ complaint.status }}
+                                </span>
+                                <span class="sentiment-badge" title="Sentiment: {{ complaint.sentiment }}">
+                                    {{ complaint.sentiment_emoji() }} {{ complaint.sentiment }}
+                                </span>
+                            </div>
+                            <small class="text-muted">
+                                <i class="bi bi-clock me-1"></i>
+                                {{ complaint.created_at.strftime('%b %d, %Y %I:%M %p') }}
+                            </small>
+                        </div>
+
+                        <h3 class="fw-bold mb-2">{{ complaint.title }}</h3>
+
+                        <div class="d-flex gap-3 mb-3">
+                            <span class="text-muted small">
+                                <i class="bi bi-person me-1"></i>{{ complaint.author.name }}
+                            </span>
+                            <span class="text-muted small">
+                                <i class="bi bi-building me-1"></i>{{ complaint.department }}
+                            </span>
+                            <span class="text-muted small">
+                                <i class="bi bi-hash"></i>{{ complaint.id }}
+                            </span>
+                        </div>
+
+                        <div class="complaint-description p-3 rounded-3 mb-3">
+                            {{ complaint.description }}
+                        </div>
+
+                        {% if complaint.attachment %}
+                        <div class="mb-3">
+                            <a href="{{ url_for('static', filename='uploads/' + complaint.attachment) }}" 
+                               class="btn btn-outline-secondary btn-sm rounded-pill" target="_blank">
+                                <i class="bi bi-paperclip me-1"></i>View Attachment
+                            </a>
+                        </div>
+                        {% endif %}
+
+                        <!-- Admin: Update Status -->
+                        {% if current_user.is_admin() %}
+                        <div class="d-flex gap-2 align-items-center mt-3 pt-3 border-top">
+                            <span class="fw-medium small text-muted me-2">Update Status:</span>
+                            <form method="POST" action="{{ url_for('update_status', complaint_id=complaint.id) }}" class="d-inline">
+                                <input type="hidden" name="status" value="Pending">
+                                <button type="submit" class="btn btn-sm btn-outline-warning rounded-pill {% if complaint.status == 'Pending' %}active{% endif %}">
+                                    Pending
+                                </button>
+                            </form>
+                            <form method="POST" action="{{ url_for('update_status', complaint_id=complaint.id) }}" class="d-inline">
+                                <input type="hidden" name="status" value="In Progress">
+                                <button type="submit" class="btn btn-sm btn-outline-info rounded-pill {% if complaint.status == 'In Progress' %}active{% endif %}">
+                                    In Progress
+                                </button>
+                            </form>
+                            <form method="POST" action="{{ url_for('update_status', complaint_id=complaint.id) }}" class="d-inline">
+                                <input type="hidden" name="status" value="Resolved">
+                                <button type="submit" class="btn btn-sm btn-outline-success rounded-pill {% if complaint.status == 'Resolved' %}active{% endif %}">
+                                    Resolved
+                                </button>
+                            </form>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Replies Section -->
+                <div class="card border-0 shadow-lg glass-card mb-4">
+                    <div class="card-body p-4">
+                        <h5 class="fw-bold mb-4">
+                            <i class="bi bi-chat-dots me-2"></i>Replies
+                            <span class="badge bg-secondary rounded-pill ms-2">{{ complaint.replies|length }}</span>
+                        </h5>
+
+                        {% if complaint.replies %}
+                            {% for reply in complaint.replies %}
+                            <div class="reply-item mb-3 p-3 rounded-3 {% if reply.is_ai %}ai-reply{% endif %}">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span class="fw-medium small">
+                                        {% if reply.is_ai %}
+                                            <i class="bi bi-robot me-1 text-primary"></i>AI Generated Reply
+                                        {% else %}
+                                            <i class="bi bi-person-badge me-1 text-success"></i>Admin Reply
+                                        {% endif %}
+                                    </span>
+                                    <small class="text-muted">{{ reply.created_at.strftime('%b %d, %Y %I:%M %p') }}</small>
+                                </div>
+                                <p class="mb-0">{{ reply.reply_text }}</p>
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="text-center text-muted py-4">
+                                <i class="bi bi-chat-left-dots fs-1 d-block mb-2 opacity-25"></i>
+                                <p>No replies yet.</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Admin: Reply Form + AI Reply -->
+                {% if current_user.is_admin() %}
+                <div class="card border-0 shadow-lg glass-card">
+                    <div class="card-body p-4">
+                        <h5 class="fw-bold mb-3">
+                            <i class="bi bi-reply me-2"></i>Send Reply
+                        </h5>
+
+                        <!-- AI Reply Button -->
+                        <button class="btn btn-primary rounded-pill mb-3" id="btnAiReply" 
+                                data-complaint-id="{{ complaint.id }}">
+                            <i class="bi bi-robot me-2"></i>Generate AI Reply
+                            <span class="spinner-border spinner-border-sm ms-1 d-none" id="aiReplySpinner"></span>
+                        </button>
+
+                        <form method="POST" action="{{ url_for('reply_complaint', complaint_id=complaint.id) }}">
+                            <div class="mb-3">
+                                <textarea class="form-control" id="replyText" name="reply_text" rows="4"
+                                          placeholder="Write your reply..." required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-accent rounded-pill px-4">
+                                <i class="bi bi-send me-2"></i>Send Reply
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Back Button -->
+                <div class="mt-4">
+                    {% if current_user.is_admin() %}
+                        <a href="{{ url_for('dashboard') }}" class="btn btn-outline-secondary rounded-pill px-4">
+                            <i class="bi bi-arrow-left me-2"></i>Back to Dashboard
+                        </a>
+                    {% else %}
+                        <a href="{{ url_for('my_complaints') }}" class="btn btn-outline-secondary rounded-pill px-4">
+                            <i class="bi bi-arrow-left me-2"></i>Back to My Complaints
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
