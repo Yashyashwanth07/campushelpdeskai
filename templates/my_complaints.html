@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% block title %}My Complaints â€” SmartCampus AI{% endblock %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2 class="fw-bold mb-1">
+                    <i class="bi bi-list-check me-2"></i>My Complaints
+                </h2>
+                <p class="text-muted mb-0">Track the status of your submitted complaints</p>
+            </div>
+            <a href="{{ url_for('new_complaint') }}" class="btn btn-accent rounded-pill px-4">
+                <i class="bi bi-plus-circle me-2"></i>New Complaint
+            </a>
+        </div>
+
+        {% if complaints %}
+        <div class="row g-4">
+            {% for complaint in complaints %}
+            <div class="col-12">
+                <div class="card border-0 shadow-sm complaint-card glass-card">
+                    <div class="card-body p-4">
+                        <div class="row align-items-center">
+                            <div class="col-lg-7">
+                                <div class="d-flex align-items-center mb-2">
+                                    <span class="badge bg-{{ complaint.status_color() }} rounded-pill me-2">
+                                        {{ complaint.status }}
+                                    </span>
+                                    <span class="sentiment-badge me-2">
+                                        {{ complaint.sentiment_emoji() }} {{ complaint.sentiment }}
+                                    </span>
+                                    <small class="text-muted">
+                                        <i class="bi bi-building me-1"></i>{{ complaint.department }}
+                                    </small>
+                                </div>
+                                <h5 class="fw-bold mb-1">
+                                    <a href="{{ url_for('complaint_detail', complaint_id=complaint.id) }}" 
+                                       class="text-decoration-none complaint-link">
+                                        {{ complaint.title }}
+                                    </a>
+                                </h5>
+                                <p class="text-muted small mb-0 text-truncate" style="max-width:500px;">
+                                    {{ complaint.description }}
+                                </p>
+                            </div>
+                            <div class="col-lg-3 text-lg-end mt-3 mt-lg-0">
+                                <small class="text-muted d-block">
+                                    <i class="bi bi-clock me-1"></i>
+                                    {{ complaint.created_at.strftime('%b %d, %Y') }}
+                                </small>
+                                <small class="text-muted">
+                                    <i class="bi bi-chat-dots me-1"></i>
+                                    {{ complaint.replies|length }} replies
+                                </small>
+                            </div>
+                            <div class="col-lg-2 text-lg-end mt-3 mt-lg-0">
+                                <a href="{{ url_for('complaint_detail', complaint_id=complaint.id) }}" 
+                                   class="btn btn-sm btn-outline-primary rounded-pill">
+                                    <i class="bi bi-eye me-1"></i>View
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="text-center py-5">
+            <div class="empty-state">
+                <i class="bi bi-inbox fs-1 d-block mb-3 opacity-25"></i>
+                <h4 class="fw-bold text-muted">No complaints yet</h4>
+                <p class="text-muted mb-4">You haven't submitted any complaints. Click below to get started.</p>
+                <a href="{{ url_for('new_complaint') }}" class="btn btn-accent rounded-pill px-4">
+                    <i class="bi bi-plus-circle me-2"></i>Submit Your First Complaint
+                </a>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
