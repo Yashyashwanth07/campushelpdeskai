@@ -1,0 +1,221 @@
+{% extends 'base.html' %}
+{% block title %}Admin Dashboard â€” SmartCampus AI{% endblock %}
+
+{% block content %}
+<section class="py-4">
+    <div class="container-fluid px-4">
+        <!-- Header -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2 class="fw-bold mb-1">
+                    <i class="bi bi-speedometer2 me-2"></i>Admin Dashboard
+                </h2>
+                <p class="text-muted mb-0">Overview of all student complaints and analytics</p>
+            </div>
+            <div class="d-flex gap-2">
+                <button class="btn btn-primary rounded-pill px-3" id="btnWeeklySummary">
+                    <i class="bi bi-robot me-2"></i>AI Weekly Summary
+                    <span class="spinner-border spinner-border-sm ms-1 d-none" id="summarySpinner"></span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="row g-4 mb-4">
+            <div class="col-sm-6 col-xl-3">
+                <div class="card border-0 shadow-sm stat-card glass-card">
+                    <div class="card-body p-4">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <p class="text-muted small mb-1 text-uppercase fw-medium">Total Complaints</p>
+                                <h2 class="fw-800 mb-0">{{ total }}</h2>
+                            </div>
+                            <div class="stat-icon bg-primary-subtle text-primary">
+                                <i class="bi bi-clipboard-data"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-xl-3">
+                <div class="card border-0 shadow-sm stat-card glass-card">
+                    <div class="card-body p-4">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <p class="text-muted small mb-1 text-uppercase fw-medium">Resolved</p>
+                                <h2 class="fw-800 mb-0">{{ resolved_pct }}%</h2>
+                            </div>
+                            <div class="stat-icon bg-success-subtle text-success">
+                                <i class="bi bi-check-circle"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-xl-3">
+                <div class="card border-0 shadow-sm stat-card glass-card">
+                    <div class="card-body p-4">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <p class="text-muted small mb-1 text-uppercase fw-medium">Urgent Today</p>
+                                <h2 class="fw-800 mb-0">{{ urgent_today }}</h2>
+                            </div>
+                            <div class="stat-icon bg-danger-subtle text-danger">
+                                <i class="bi bi-exclamation-triangle"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-xl-3">
+                <div class="card border-0 shadow-sm stat-card glass-card">
+                    <div class="card-body p-4">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <p class="text-muted small mb-1 text-uppercase fw-medium">Top Department</p>
+                                <h2 class="fw-800 mb-0 fs-4">{{ top_dept }}</h2>
+                            </div>
+                            <div class="stat-icon bg-info-subtle text-info">
+                                <i class="bi bi-building"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Row -->
+        <div class="row g-4 mb-4">
+            <div class="col-lg-7">
+                <div class="card border-0 shadow-sm glass-card h-100">
+                    <div class="card-body p-4">
+                        <h5 class="fw-bold mb-3">
+                            <i class="bi bi-bar-chart me-2"></i>Complaints by Department
+                        </h5>
+                        <canvas id="deptChart" height="260"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-5">
+                <div class="card border-0 shadow-sm glass-card h-100">
+                    <div class="card-body p-4">
+                        <h5 class="fw-bold mb-3">
+                            <i class="bi bi-graph-up me-2"></i>Weekly Trend
+                        </h5>
+                        <canvas id="trendChart" height="260"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- AI Weekly Summary -->
+        <div class="card border-0 shadow-sm glass-card mb-4" id="summaryCard" style="display:none;">
+            <div class="card-body p-4">
+                <div class="d-flex align-items-center mb-3">
+                    <i class="bi bi-robot fs-4 text-primary me-2"></i>
+                    <h5 class="fw-bold mb-0">AI Weekly Summary</h5>
+                </div>
+                <p class="mb-0" id="summaryText"></p>
+            </div>
+        </div>
+
+        <!-- Complaints Table -->
+        <div class="card border-0 shadow-sm glass-card">
+            <div class="card-body p-4">
+                <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+                    <h5 class="fw-bold mb-0">
+                        <i class="bi bi-table me-2"></i>Recent Complaints
+                    </h5>
+                    <div class="d-flex gap-2 flex-wrap">
+                        <input type="text" class="form-control form-control-sm" id="searchInput"
+                            placeholder="ðŸ” Search..." style="width:200px;">
+                        <select class="form-select form-select-sm" id="filterDept" style="width:160px;">
+                            <option value="">All Departments</option>
+                            <option value="Hostel">Hostel</option>
+                            <option value="Faculty">Faculty</option>
+                            <option value="Lab">Lab</option>
+                            <option value="Library">Library</option>
+                            <option value="Canteen">Canteen</option>
+                            <option value="Transport">Transport</option>
+                            <option value="Administration">Administration</option>
+                            <option value="Infrastructure">Infrastructure</option>
+                            <option value="Other">Other</option>
+                        </select>
+                        <select class="form-select form-select-sm" id="filterStatus" style="width:140px;">
+                            <option value="">All Status</option>
+                            <option value="Pending">Pending</option>
+                            <option value="In Progress">In Progress</option>
+                            <option value="Resolved">Resolved</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0" id="complaintsTable">
+                        <thead>
+                            <tr>
+                                <th class="text-muted small fw-medium">ID</th>
+                                <th class="text-muted small fw-medium">Student</th>
+                                <th class="text-muted small fw-medium">Title</th>
+                                <th class="text-muted small fw-medium">Department</th>
+                                <th class="text-muted small fw-medium">Sentiment</th>
+                                <th class="text-muted small fw-medium">Status</th>
+                                <th class="text-muted small fw-medium">Date</th>
+                                <th class="text-muted small fw-medium">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for complaint in complaints %}
+                            <tr class="complaint-row" data-dept="{{ complaint.department }}"
+                                data-status="{{ complaint.status }}"
+                                data-search="{{ complaint.title|lower }} {{ complaint.author.name|lower }} {{ complaint.department|lower }}">
+                                <td><span class="fw-medium">#{{ complaint.id }}</span></td>
+                                <td>{{ complaint.author.name }}</td>
+                                <td class="text-truncate" style="max-width:200px;">{{ complaint.title }}</td>
+                                <td>
+                                    <span class="badge bg-light text-dark border">{{ complaint.department }}</span>
+                                </td>
+                                <td>
+                                    <span class="sentiment-badge">
+                                        {{ complaint.sentiment_emoji() }} {{ complaint.sentiment }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="badge bg-{{ complaint.status_color() }} rounded-pill">
+                                        {{ complaint.status }}
+                                    </span>
+                                </td>
+                                <td class="small text-muted">{{ complaint.created_at.strftime('%b %d') }}</td>
+                                <td>
+                                    <a href="{{ url_for('complaint_detail', complaint_id=complaint.id) }}"
+                                        class="btn btn-sm btn-outline-primary rounded-pill">
+                                        <i class="bi bi-eye me-1"></i>View
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                {% if not complaints %}
+                <div class="text-center py-5">
+                    <i class="bi bi-inbox fs-1 d-block mb-2 opacity-25"></i>
+                    <p class="text-muted">No complaints found.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+{% block extra_js %}
+<script>
+    // Chart data from Flask
+    const deptLabels = {{ dept_labels| tojson }};
+    const deptCounts = {{ dept_counts| tojson }};
+    const trendLabels = {{ trend_labels| tojson }};
+    const trendCounts = {{ trend_counts| tojson }};
+</script>
+{% endblock %}
+{% endblock %}
