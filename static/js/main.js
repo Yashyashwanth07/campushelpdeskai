@@ -1,0 +1,225 @@
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   SmartCampus AI â€” Main JavaScript (jQuery)
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+
+$(document).ready(function () {
+
+    // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // AI Suggestion while typing (Complaint Form)
+    // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    let suggestionTimer = null;
+
+    $('#description').on('input', function () {
+        const text = $(this).val();
+
+        clearTimeout(suggestionTimer);
+
+        if (text.length < 30) {
+            $('#aiSuggestionBox').slideUp(200);
+            return;
+        }
+
+        suggestionTimer = setTimeout(function () {
+            $.ajax({
+                url: '/api/ai-suggest',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ text: text }),
+                success: function (data) {
+                    if (data.suggestion) {
+                        $('#aiSuggestionText').text(data.suggestion);
+                        $('#aiSuggestionBox').slideDown(300);
+                    }
+                },
+                error: function () {
+                    console.log('AI suggestion unavailable');
+                }
+            });
+        }, 1500); // Debounce: wait 1.5s after typing stops
+    });
+
+
+    // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // AI Reply Generation (Complaint Detail â€” Admin)
+    // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    $('#btnAiReply').on('click', function () {
+        const btn = $(this);
+        const complaintId = btn.data('complaint-id');
+        const spinner = $('#aiReplySpinner');
+
+        btn.prop('disabled', true);
+        spinner.removeClass('d-none');
+
+        $.ajax({
+            url: '/api/ai-reply',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ complaint_id: complaintId }),
+            success: function (data) {
+                if (data.reply) {
+                    // Set the reply text in the textarea
+                    $('#replyText').val(data.reply);
+                    $('#replyText').focus();
+                }
+            },
+            error: function (xhr) {
+                alert('Failed to generate AI reply. Please try again.');
+                console.error('AI Reply Error:', xhr.responseText);
+            },
+            complete: function () {
+                btn.prop('disabled', false);
+                spinner.addClass('d-none');
+            }
+        });
+    });
+
+
+    // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // AI Weekly Summary (Dashboard â€” Admin)
+    // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    $('#btnWeeklySummary').on('click', function () {
+        const btn = $(this);
+        const spinner = $('#summarySpinner');
+
+        btn.prop('disabled', true);
+        spinner.removeClass('d-none');
+
+        $.ajax({
+            url: '/api/ai-summary',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({}),
+            success: function (data) {
+                if (data.summary) {
+                    $('#summaryText').text(data.summary);
+                    $('#summaryCard').slideDown(300);
+                }
+            },
+            error: function (xhr) {
+                alert('Failed to generate summary. Please try again.');
+                console.error('Summary Error:', xhr.responseText);
+            },
+            complete: function () {
+                btn.prop('disabled', false);
+                spinner.addClass('d-none');
+            }
+        });
+    });
+
+
+    // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // Dashboard: Search & Filter
+    // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    function filterTable() {
+        const search = $('#searchInput').val().toLowerCase();
+        const deptFilter = $('#filterDept').val();
+        const statusFilter = $('#filterStatus').val();
+
+        $('.complaint-row').each(function () {
+            const row = $(this);
+            const matchSearch = !search || row.data('search').includes(search);
+            const matchDept = !deptFilter || row.data('dept') === deptFilter;
+            const matchStatus = !statusFilter || row.data('status') === statusFilter;
+
+            row.toggle(matchSearch && matchDept && matchStatus);
+        });
+    }
+
+    $('#searchInput').on('input', filterTable);
+    $('#filterDept').on('change', filterTable);
+    $('#filterStatus').on('change', filterTable);
+
+
+    // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // Dashboard: Chart.js Initialization
+    // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    if (typeof deptLabels !== 'undefined' && document.getElementById('deptChart')) {
+        // Color palette
+        const chartColors = [
+            '#6366f1', '#a855f7', '#ec4899', '#f43f5e',
+            '#f97316', '#eab308', '#22c55e', '#14b8a6', '#06b6d4'
+        ];
+
+        // Department Bar Chart
+        new Chart(document.getElementById('deptChart'), {
+            type: 'bar',
+            data: {
+                labels: deptLabels,
+                datasets: [{
+                    label: 'Complaints',
+                    data: deptCounts,
+                    backgroundColor: chartColors.slice(0, deptLabels.length),
+                    borderRadius: 8,
+                    borderSkipped: false,
+                    barPercentage: 0.6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: { stepSize: 1, font: { family: 'Inter' } },
+                        grid: { color: 'rgba(0,0,0,0.04)' }
+                    },
+                    x: {
+                        ticks: { font: { family: 'Inter', size: 11 } },
+                        grid: { display: false }
+                    }
+                }
+            }
+        });
+
+        // Weekly Trend Line Chart
+        new Chart(document.getElementById('trendChart'), {
+            type: 'line',
+            data: {
+                labels: trendLabels,
+                datasets: [{
+                    label: 'Complaints',
+                    data: trendCounts,
+                    borderColor: '#6366f1',
+                    backgroundColor: 'rgba(99, 102, 241, 0.1)',
+                    fill: true,
+                    tension: 0.4,
+                    pointBackgroundColor: '#6366f1',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                    pointRadius: 5,
+                    pointHoverRadius: 7
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: { stepSize: 1, font: { family: 'Inter' } },
+                        grid: { color: 'rgba(0,0,0,0.04)' }
+                    },
+                    x: {
+                        ticks: { font: { family: 'Inter' } },
+                        grid: { display: false }
+                    }
+                }
+            }
+        });
+    }
+
+
+    // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // Auto-dismiss alerts after 5 seconds
+    // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    setTimeout(function () {
+        $('.alert').alert('close');
+    }, 5000);
+
+});
