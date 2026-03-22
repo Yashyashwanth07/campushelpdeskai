@@ -1,5 +1,5 @@
-﻿{% extends 'base.html' %}
-{% block title %}SmartCampus AI - Student Complaint & Feedback Portal{% endblock %}
+{% extends 'base.html' %}
+{% block title %}SmartCampus AI — Campus Helpdesk Portal{% endblock %}
 
 {% block content %}
 <!-- Hero Section -->
@@ -13,70 +13,50 @@
         <div class="row align-items-center min-vh-75">
             <div class="col-lg-6">
                 <div class="hero-badge mb-3">
-                    <i class="bi bi-stars me-1"></i> Powered by LLaMA 4 Maverick AI
+                    <i class="bi bi-headset me-1"></i> Campus Helpdesk Portal
                 </div>
                 <h1 class="display-4 fw-800 mb-3">
-                    Your Voice <span class="text-gradient">Matters.</span><br>
-                    We Listen with <span class="text-gradient">AI.</span>
+                    Got a <span class="text-gradient">Campus Issue?</span><br>
+                    We're Here to <span class="text-gradient">Help.</span>
                 </h1>
                 <p class="lead text-muted mb-4">
-                    SmartCampus AI is an intelligent complaint and feedback portal that uses advanced AI
-                    to categorize, analyze, and help resolve student concerns faster than ever.
+                    Report complaints about hostel, canteen, library, transport, or any campus facility.
+                    Our smart helpdesk ensures your concerns are heard and resolved quickly.
                 </p>
                 <div class="d-flex gap-3 flex-wrap">
                     {% if current_user.is_authenticated %}
-                        {% if current_user.is_admin() %}
-                            <a href="{{ url_for('dashboard') }}" class="btn btn-accent btn-lg rounded-pill px-4">
-                                <i class="bi bi-speedometer2 me-2"></i>Go to Dashboard
-                            </a>
-                        {% else %}
-                            <a href="{{ url_for('new_complaint') }}" class="btn btn-accent btn-lg rounded-pill px-4">
-                                <i class="bi bi-pencil-square me-2"></i>Submit Complaint
-                            </a>
-                            <a href="{{ url_for('my_complaints') }}" class="btn btn-outline-light btn-lg rounded-pill px-4">
-                                <i class="bi bi-list-check me-2"></i>My Complaints
-                            </a>
-                        {% endif %}
+                    {% if current_user.is_admin() %}
+                    <a href="{{ url_for('dashboard') }}" class="btn btn-accent btn-lg rounded-pill px-4">
+                        <i class="bi bi-speedometer2 me-2"></i>Go to Dashboard
+                    </a>
                     {% else %}
-                        <a href="{{ url_for('register') }}" class="btn btn-accent btn-lg rounded-pill px-4">
-                            <i class="bi bi-rocket-takeoff me-2"></i>Get Started
-                        </a>
-                        <a href="{{ url_for('login') }}" class="btn btn-outline-light btn-lg rounded-pill px-4">
-                            <i class="bi bi-box-arrow-in-right me-2"></i>Login
-                        </a>
+                    <a href="{{ url_for('new_complaint') }}" class="btn btn-accent btn-lg rounded-pill px-4">
+                        <i class="bi bi-pencil-square me-2"></i>Report an Issue
+                    </a>
+                    <a href="{{ url_for('my_complaints') }}" class="btn btn-outline-light btn-lg rounded-pill px-4">
+                        <i class="bi bi-list-check me-2"></i>My Complaints
+                    </a>
                     {% endif %}
-                </div>
-            </div>
-            <div class="col-lg-6 d-none d-lg-block text-center">
-                <div class="hero-illustration">
-                    <div class="floating-card card-1">
-                        <i class="bi bi-robot fs-1 text-primary"></i>
-                        <span>AI Analysis</span>
-                    </div>
-                    <div class="floating-card card-2">
-                        <i class="bi bi-shield-check fs-1 text-success"></i>
-                        <span>Smart Routing</span>
-                    </div>
-                    <div class="floating-card card-3">
-                        <i class="bi bi-lightning-charge fs-1 text-warning"></i>
-                        <span>Fast Resolution</span>
-                    </div>
-                    <div class="floating-card card-4">
-                        <i class="bi bi-graph-up-arrow fs-1 text-info"></i>
-                        <span>Analytics</span>
-                    </div>
+                    {% else %}
+                    <a href="{{ url_for('register') }}" class="btn btn-accent btn-lg rounded-pill px-4">
+                        <i class="bi bi-rocket-takeoff me-2"></i>Get Started
+                    </a>
+                    <a href="{{ url_for('login') }}" class="btn btn-outline-light btn-lg rounded-pill px-4">
+                        <i class="bi bi-box-arrow-in-right me-2"></i>Login
+                    </a>
+                    {% endif %}
                 </div>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Features Section -->
+<!-- How It Works Section -->
 <section class="py-5" id="features">
     <div class="container">
         <div class="text-center mb-5">
             <h2 class="fw-bold">How It <span class="text-gradient">Works</span></h2>
-            <p class="text-muted">Powered by cutting-edge AI to make campus life better</p>
+            <p class="text-muted">Simple 4-step process to get your campus issue resolved</p>
         </div>
         <div class="row g-4">
             <div class="col-md-6 col-lg-3">
@@ -84,67 +64,74 @@
                     <div class="feature-icon mb-3">
                         <i class="bi bi-pencil-square"></i>
                     </div>
-                    <h5 class="fw-bold">Submit</h5>
-                    <p class="text-muted small">Write your complaint or feedback. AI suggests solutions as you type.</p>
+                    <h5 class="fw-bold">Report Issue</h5>
+                    <p class="text-muted small">Describe your complaint — hostel, canteen, library, transport, or any
+                        campus facility.</p>
                 </div>
             </div>
             <div class="col-md-6 col-lg-3">
                 <div class="feature-card text-center p-4 h-100">
                     <div class="feature-icon mb-3">
-                        <i class="bi bi-cpu"></i>
+                        <i class="bi bi-funnel"></i>
                     </div>
-                    <h5 class="fw-bold">AI Analyzes</h5>
-                    <p class="text-muted small">LLaMA 4 categorizes your complaint and determines urgency automatically.</p>
+                    <h5 class="fw-bold">Auto-Categorized</h5>
+                    <p class="text-muted small">Your complaint is instantly routed to the right department and
+                        prioritized by urgency.</p>
                 </div>
             </div>
             <div class="col-md-6 col-lg-3">
                 <div class="feature-card text-center p-4 h-100">
                     <div class="feature-icon mb-3">
-                        <i class="bi bi-reply-all"></i>
+                        <i class="bi bi-chat-quote"></i>
                     </div>
-                    <h5 class="fw-bold">Smart Reply</h5>
-                    <p class="text-muted small">Admin gets AI-drafted professional responses for faster handling.</p>
+                    <h5 class="fw-bold">Get Response</h5>
+                    <p class="text-muted small">The admin team reviews and responds with actionable solutions to your
+                        concern.</p>
                 </div>
             </div>
             <div class="col-md-6 col-lg-3">
                 <div class="feature-card text-center p-4 h-100">
                     <div class="feature-icon mb-3">
-                        <i class="bi bi-graph-up"></i>
+                        <i class="bi bi-check2-circle"></i>
                     </div>
                     <h5 class="fw-bold">Track & Resolve</h5>
-                    <p class="text-muted small">Monitor status, get notified on updates, and see resolution progress.</p>
+                    <p class="text-muted small">Follow your complaint status from Pending → In Progress → Resolved in
+                        real time.</p>
                 </div>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Stats Section -->
+<!-- Why Use This Section -->
 <section class="py-5 stats-section">
     <div class="container">
+        <div class="text-center mb-4">
+            <h3 class="fw-bold text-white">Why Students Love <span class="text-gradient">SmartCampus</span></h3>
+        </div>
         <div class="row g-4 text-center">
             <div class="col-6 col-md-3">
                 <div class="stat-item">
-                    <h2 class="fw-800 text-gradient mb-0">AI</h2>
-                    <small class="text-muted">Powered Analysis</small>
+                    <h2 class="fw-800 text-gradient mb-1">🏫</h2>
+                    <small class="text-white-50">9+ Departments</small>
                 </div>
             </div>
             <div class="col-6 col-md-3">
                 <div class="stat-item">
-                    <h2 class="fw-800 text-gradient mb-0">24/7</h2>
-                    <small class="text-muted">Availability</small>
+                    <h2 class="fw-800 text-gradient mb-1">⚡</h2>
+                    <small class="text-white-50">Instant Routing</small>
                 </div>
             </div>
             <div class="col-6 col-md-3">
                 <div class="stat-item">
-                    <h2 class="fw-800 text-gradient mb-0">Fast</h2>
-                    <small class="text-muted">Resolution</small>
+                    <h2 class="fw-800 text-gradient mb-1">📊</h2>
+                    <small class="text-white-50">Real-Time Tracking</small>
                 </div>
             </div>
             <div class="col-6 col-md-3">
                 <div class="stat-item">
-                    <h2 class="fw-800 text-gradient mb-0">Smart</h2>
-                    <small class="text-muted">Categorization</small>
+                    <h2 class="fw-800 text-gradient mb-1">🔒</h2>
+                    <small class="text-white-50">Secure & Private</small>
                 </div>
             </div>
         </div>

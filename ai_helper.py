@@ -4,7 +4,7 @@ from config import Config
 
 
 def _call_llama(system_prompt, user_prompt):
-    """Make a call to LLaMA 4 Maverick via Together AI API."""
+    """Make a call to the AI model via Together AI API."""
     headers = {
         'Authorization': f'Bearer {Config.TOGETHER_API_KEY}',
         'Content-Type': 'application/json'
@@ -26,7 +26,7 @@ def _call_llama(system_prompt, user_prompt):
         data = response.json()
         return data['choices'][0]['message']['content'].strip()
     except requests.exceptions.RequestException as e:
-        print(f"LLaMA API Error: {e}")
+        print(f"AI API Error: {e}")
         if hasattr(e, 'response') and e.response is not None:
             print(f"Response body: {e.response.text}")
         return None

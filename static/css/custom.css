@@ -1,8 +1,8 @@
-/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-   SmartCampus AI â€” Custom Styles
-   â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ────────────────────────────────────────────
+   SmartCampus AI — Custom Styles
+   ──────────────────────────────────────────── */
 
-/* â”€â”€â”€ CSS Variables â”€â”€â”€ */
+/* ─── CSS Variables ─── */
 :root {
     --accent: #6366f1;
     --accent-dark: #4f46e5;
@@ -23,7 +23,7 @@
     --radius-sm: 10px;
 }
 
-/* â”€â”€â”€ Base â”€â”€â”€ */
+/* ─── Base ─── */
 * {
     margin: 0;
     padding: 0;
@@ -42,7 +42,7 @@ body {
     font-weight: 800 !important;
 }
 
-/* â”€â”€â”€ Accent Helpers â”€â”€â”€ */
+/* ─── Accent Helpers ─── */
 .text-accent {
     color: var(--accent) !important;
 }
@@ -70,7 +70,7 @@ body {
     box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
 }
 
-/* â”€â”€â”€ Glass Card â”€â”€â”€ */
+/* ─── Glass Card ─── */
 .glass-card {
     background: var(--bg-card);
     backdrop-filter: blur(12px);
@@ -83,7 +83,7 @@ body {
     box-shadow: var(--shadow-md);
 }
 
-/* â”€â”€â”€ Navbar â”€â”€â”€ */
+/* ─── Navbar ─── */
 #mainNavbar {
     background: var(--bg-navbar);
     backdrop-filter: blur(20px);
@@ -110,7 +110,7 @@ body {
     background: rgba(99, 102, 241, 0.06);
 }
 
-/* â”€â”€â”€ Hero Section â”€â”€â”€ */
+/* ─── Hero Section ─── */
 .hero-section {
     background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #312e81 100%);
     padding: 5rem 0 6rem;
@@ -230,7 +230,7 @@ body {
     animation: float 6s ease-in-out infinite 3s;
 }
 
-/* â”€â”€â”€ Features Section â”€â”€â”€ */
+/* ─── Features Section ─── */
 .feature-card {
     background: var(--bg-card);
     border-radius: var(--radius);
@@ -255,7 +255,7 @@ body {
     font-size: 1.5rem;
 }
 
-/* â”€â”€â”€ Stats Section â”€â”€â”€ */
+/* ─── Stats Section ─── */
 .stats-section {
     background: linear-gradient(135deg, #1e1b4b, #312e81);
     border-radius: 0;
@@ -265,7 +265,7 @@ body {
     padding: 1.5rem;
 }
 
-/* â”€â”€â”€ Auth Pages â”€â”€â”€ */
+/* ─── Auth Pages ─── */
 .auth-section {
     min-height: calc(100vh - 200px);
     display: flex;
@@ -297,7 +297,7 @@ body {
     margin: 0 auto;
 }
 
-/* â”€â”€â”€ Forms â”€â”€â”€ */
+/* ─── Forms ─── */
 .form-control,
 .form-select {
     border: 2px solid var(--border-color);
@@ -318,7 +318,7 @@ body {
     font-size: 1rem;
 }
 
-/* â”€â”€â”€ Dashboard â”€â”€â”€ */
+/* ─── Dashboard ─── */
 .stat-card {
     transition: transform 0.2s ease;
 }
@@ -337,7 +337,7 @@ body {
     font-size: 1.3rem;
 }
 
-/* â”€â”€â”€ Sentiment Badge â”€â”€â”€ */
+/* ─── Sentiment Badge ─── */
 .sentiment-badge {
     font-size: 0.8rem;
     font-weight: 600;
@@ -346,7 +346,7 @@ body {
     background: rgba(0, 0, 0, 0.04);
 }
 
-/* â”€â”€â”€ Complaint Cards â”€â”€â”€ */
+/* ─── Complaint Cards ─── */
 .complaint-card {
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
@@ -372,7 +372,7 @@ body {
     word-wrap: break-word;
 }
 
-/* â”€â”€â”€ AI Suggestion Box â”€â”€â”€ */
+/* ─── AI Suggestion Box ─── */
 .ai-suggestion-box {
     background: linear-gradient(135deg, rgba(99, 102, 241, 0.06), rgba(168, 85, 247, 0.06));
     border: 1px solid rgba(99, 102, 241, 0.15);
@@ -392,7 +392,7 @@ body {
     }
 }
 
-/* â”€â”€â”€ Reply Items â”€â”€â”€ */
+/* ─── Reply Items ─── */
 .reply-item {
     background: rgba(0, 0, 0, 0.02);
     border: 1px solid var(--border-color);
@@ -403,7 +403,7 @@ body {
     border-color: rgba(99, 102, 241, 0.15);
 }
 
-/* â”€â”€â”€ Table â”€â”€â”€ */
+/* ─── Table ─── */
 .table {
     --bs-table-hover-bg: rgba(99, 102, 241, 0.04);
 }
@@ -415,18 +415,19 @@ body {
     font-size: 0.75rem;
 }
 
-/* â”€â”€â”€ Footer â”€â”€â”€ */
+/* ─── Footer ─── */
 #mainFooter {
     background: #f8f9fa;
     border-top: 1px solid var(--border-color);
 }
 
-/* â”€â”€â”€ Charts â”€â”€â”€ */
+/* ─── Charts ─── */
 canvas {
     max-width: 100%;
+    max-height: 180px;
 }
 
-/* â”€â”€â”€ Dashboard Layout â”€â”€â”€ */
+/* ─── Dashboard Layout ─── */
 .dashboard-section {
     text-align: justify;
 }
@@ -439,7 +440,7 @@ canvas {
     font-size: 1.6rem;
 }
 
-/* â”€â”€â”€ Scrollbar â”€â”€â”€ */
+/* ─── Scrollbar ─── */
 ::-webkit-scrollbar {
     width: 8px;
 }
@@ -457,7 +458,7 @@ canvas {
     background: rgba(0, 0, 0, 0.25);
 }
 
-/* â”€â”€â”€ Responsive Tweaks â”€â”€â”€ */
+/* ─── Responsive Tweaks ─── */
 @media (max-width: 768px) {
     .hero-section {
         padding: 3rem 0 4rem;
@@ -477,7 +478,7 @@ canvas {
     }
 }
 
-/* â”€â”€â”€ Animations â”€â”€â”€ */
+/* ─── Animations ─── */
 .card,
 .btn {
     transition: all 0.2s ease;
