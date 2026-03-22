@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% block title %}Complaint #{{ complaint.id }} â€” SmartCampus AI{% endblock %}
+{% block title %}Complaint #{{ complaint.id }} — SmartCampus AI{% endblock %}
 
 {% block content %}
 <section class="py-5">
@@ -88,10 +88,10 @@
 
                         {% if complaint.replies %}
                             {% for reply in complaint.replies %}
-                            <div class="reply-item mb-3 p-3 rounded-3 {% if reply.is_ai %}ai-reply{% endif %}">
+                            <div class="reply-item mb-3 p-3 rounded-3 {% if reply.is_ai and current_user.is_admin() %}ai-reply{% endif %}">
                                 <div class="d-flex justify-content-between align-items-center mb-2">
                                     <span class="fw-medium small">
-                                        {% if reply.is_ai %}
+                                        {% if reply.is_ai and current_user.is_admin() %}
                                             <i class="bi bi-robot me-1 text-primary"></i>AI Generated Reply
                                         {% else %}
                                             <i class="bi bi-person-badge me-1 text-success"></i>Admin Reply

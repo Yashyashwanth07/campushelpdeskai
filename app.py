@@ -35,7 +35,7 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 
-# â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ PUBLIC ROUTES â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ─────────────────────────── PUBLIC ROUTES ───────────────────────────
 
 @app.route('/')
 def index():
@@ -108,7 +108,7 @@ def logout():
     return redirect(url_for('index'))
 
 
-# â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ STUDENT ROUTES â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ─────────────────────────── STUDENT ROUTES ───────────────────────────
 
 @app.route('/complaint/new', methods=['GET', 'POST'])
 @login_required
@@ -159,12 +159,25 @@ def my_complaints():
     if current_user.is_admin():
         return redirect(url_for('dashboard'))
 
-    complaints = Complaint.query.filter_by(user_id=current_user.id)\
+    complaints = Complaint.query.filter_by(user_id=current_user.id, hidden_by_user=False)\
         .order_by(Complaint.created_at.desc()).all()
     return render_template('my_complaints.html', complaints=complaints)
 
 
-    # Soft delete â€” hide from student but keep in admin dashboard
+@app.route('/complaint/<int:complaint_id>/delete', methods=['POST'])
+@login_required
+def delete_complaint(complaint_id):
+    if current_user.is_admin():
+        flash('Admins cannot delete complaints.', 'danger')
+        return redirect(url_for('dashboard'))
+
+    complaint = Complaint.query.get_or_404(complaint_id)
+
+    if complaint.user_id != current_user.id:
+        flash('Access denied.', 'danger')
+        return redirect(url_for('my_complaints'))
+
+    # Soft delete — hide from student but keep in admin dashboard
     complaint.hidden_by_user = True
     db.session.commit()
 
@@ -185,7 +198,7 @@ def complaint_detail(complaint_id):
     return render_template('complaint_detail.html', complaint=complaint)
 
 
-# â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ ADMIN ROUTES â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ─────────────────────────── ADMIN ROUTES ───────────────────────────
 
 @app.route('/dashboard')
 @login_required
@@ -280,7 +293,7 @@ def update_status(complaint_id):
     return redirect(url_for('complaint_detail', complaint_id=complaint_id))
 
 
-# â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ AI API ROUTES â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ─────────────────────────── AI API ROUTES ───────────────────────────
 
 @app.route('/api/ai-suggest', methods=['POST'])
 @login_required
@@ -309,19 +322,8 @@ def ai_reply():
 
     reply_text = generate_reply(complaint.title, complaint.description, complaint.department)
 
-    # Save AI reply
-    reply = Reply(
-        complaint_id=complaint_id,
-        reply_text=reply_text,
-        is_ai=True
-    )
-    db.session.add(reply)
-    db.session.commit()
-
-    return jsonify({
-        'reply': reply_text,
-        'created_at': reply.created_at.strftime('%b %d, %Y %I:%M %p')
-    })
+    # Return AI reply text for admin to review before sending
+    return jsonify({'reply': reply_text})
 
 
 @app.route('/api/ai-sentiment', methods=['POST'])
@@ -350,14 +352,14 @@ def ai_summary():
     complaints_text = ""
     for c in complaints:
         complaints_text += (
-            f"- [{c.sentiment}] {c.department}: {c.title} â€” {c.description[:100]}\n"
+            f"- [{c.sentiment}] {c.department}: {c.title} — {c.description[:100]}\n"
         )
 
     summary = generate_weekly_summary(complaints_text)
     return jsonify({'summary': summary})
 
 
-# â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ INIT â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ─────────────────────────── INIT ───────────────────────────
 
 def create_tables():
     """Create database tables and default admin account."""

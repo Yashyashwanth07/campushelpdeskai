@@ -39,17 +39,18 @@ class Complaint(db.Model):
     status = db.Column(db.String(20), default='Pending')  # Pending, In Progress, Resolved
     sentiment = db.Column(db.String(20), default='Neutral')  # Urgent, Neutral, Positive
     attachment = db.Column(db.String(256), nullable=True)
+    hidden_by_user = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
-    replies = db.relationship('Reply', backref='complaint', lazy=True, order_by='Reply.created_at')
+    replies = db.relationship('Reply', backref='complaint', lazy=True, order_by='Reply.created_at', cascade='all, delete-orphan')
 
     def sentiment_emoji(self):
         mapping = {
-            'Urgent': 'ðŸ”´',
-            'Neutral': 'ðŸŸ¡',
-            'Positive': 'ðŸŸ¢'
+            'Urgent': '🔴',
+            'Neutral': '🟡',
+            'Positive': '🟢'
         }
-        return mapping.get(self.sentiment, 'ðŸŸ¡')
+        return mapping.get(self.sentiment, '🟡')
 
     def status_color(self):
         mapping = {
