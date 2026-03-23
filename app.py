@@ -133,7 +133,7 @@ def new_complaint():
         if 'attachment' in request.files:
             file = request.files['attachment']
             if file and file.filename and allowed_file(file.filename):
-                attachment_filename = secure_filename(f"{datetime.utcnow().strftime('%Y%m%d%H%M%S')}_{file.filename}")
+                attachment_filename = secure_filename(f"{datetime.now().strftime('%Y%m%d%H%M%S')}_{file.filename}")
                 file.save(os.path.join(app.config['UPLOAD_FOLDER'], attachment_filename))
 
         complaint = Complaint(
@@ -211,7 +211,7 @@ def dashboard():
     resolved = Complaint.query.filter_by(status='Resolved').count()
     urgent_today = Complaint.query.filter(
         Complaint.sentiment == 'Urgent',
-        Complaint.created_at >= datetime.utcnow().replace(hour=0, minute=0, second=0)
+        Complaint.created_at >= datetime.now().replace(hour=0, minute=0, second=0)
     ).count()
 
     resolved_pct = round((resolved / total * 100), 1) if total > 0 else 0
@@ -231,7 +231,7 @@ def dashboard():
     trend_labels = []
     trend_counts = []
     for i in range(6, -1, -1):
-        day = datetime.utcnow() - timedelta(days=i)
+        day = datetime.now() - timedelta(days=i)
         day_start = day.replace(hour=0, minute=0, second=0, microsecond=0)
         day_end = day_start + timedelta(days=1)
         count = Complaint.query.filter(
@@ -342,7 +342,7 @@ def ai_summary():
         return jsonify({'error': 'Access denied'}), 403
 
     # Get this week's complaints
-    week_ago = datetime.utcnow() - timedelta(days=7)
+    week_ago = datetime.now() - timedelta(days=7)
     complaints = Complaint.query.filter(Complaint.created_at >= week_ago).all()
 
     if not complaints:

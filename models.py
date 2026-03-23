@@ -14,7 +14,7 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password_hash = db.Column(db.String(256), nullable=False)
     role = db.Column(db.String(10), nullable=False, default='student')  # 'student' or 'admin'
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=datetime.now)
 
     complaints = db.relationship('Complaint', backref='author', lazy=True)
 
@@ -40,7 +40,7 @@ class Complaint(db.Model):
     sentiment = db.Column(db.String(20), default='Neutral')  # Urgent, Neutral, Positive
     attachment = db.Column(db.String(256), nullable=True)
     hidden_by_user = db.Column(db.Boolean, default=False)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=datetime.now)
 
     replies = db.relationship('Reply', backref='complaint', lazy=True, order_by='Reply.created_at', cascade='all, delete-orphan')
 
@@ -68,4 +68,4 @@ class Reply(db.Model):
     complaint_id = db.Column(db.Integer, db.ForeignKey('complaints.id'), nullable=False)
     reply_text = db.Column(db.Text, nullable=False)
     is_ai = db.Column(db.Boolean, default=False)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=datetime.now)
