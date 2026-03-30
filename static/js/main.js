@@ -1,12 +1,5 @@
-/* ════════════════════════════════════════════
-   SmartCampus AI — Main JavaScript (jQuery)
-   ════════════════════════════════════════════ */
-
 $(document).ready(function () {
 
-    // ─────────────────────────────────────────
-    // AI Suggestion while typing (Complaint Form)
-    // ─────────────────────────────────────────
     let suggestionTimer = null;
 
     $('#description').on('input', function () {
@@ -35,13 +28,10 @@ $(document).ready(function () {
                     console.log('AI suggestion unavailable');
                 }
             });
-        }, 1500); // Debounce: wait 1.5s after typing stops
+        }, 1500); 
     });
 
 
-    // ─────────────────────────────────────────
-    // AI Reply Generation (Complaint Detail — Admin)
-    // ─────────────────────────────────────────
     $('#btnAiReply').on('click', function () {
         const btn = $(this);
         const complaintId = btn.data('complaint-id');
@@ -74,9 +64,7 @@ $(document).ready(function () {
     });
 
 
-    // ─────────────────────────────────────────
     // AI Weekly Summary (Dashboard — Admin)
-    // ─────────────────────────────────────────
     $('#btnWeeklySummary').on('click', function () {
         const btn = $(this);
         const spinner = $('#summarySpinner');
@@ -107,9 +95,7 @@ $(document).ready(function () {
     });
 
 
-    // ─────────────────────────────────────────
     // Dashboard: Search & Filter
-    // ─────────────────────────────────────────
     function filterTable() {
         const search = $('#searchInput').val().toLowerCase();
         const deptFilter = $('#filterDept').val();
@@ -130,9 +116,7 @@ $(document).ready(function () {
     $('#filterStatus').on('change', filterTable);
 
 
-    // ─────────────────────────────────────────
     // Dashboard: Chart.js Initialization
-    // ─────────────────────────────────────────
     if (typeof deptLabels !== 'undefined' && document.getElementById('deptChart')) {
         // Color palette
         const chartColors = [
@@ -213,11 +197,6 @@ $(document).ready(function () {
             }
         });
     }
-
-
-    // ─────────────────────────────────────────
-    // Auto-dismiss alerts after 5 seconds
-    // ─────────────────────────────────────────
     setTimeout(function () {
         $('.alert').alert('close');
     }, 5000);

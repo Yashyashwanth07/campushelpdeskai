@@ -1,8 +1,3 @@
-/* ────────────────────────────────────────────
-   SmartCampus AI — Custom Styles
-   ──────────────────────────────────────────── */
-
-/* ─── CSS Variables ─── */
 :root {
     --accent: #6366f1;
     --accent-dark: #4f46e5;
@@ -23,10 +18,10 @@
     --radius-sm: 10px;
 }
 
-/* ─── Base ─── */
+/* Base */
 * {
     margin: 0;
-    padding: 0;
+    padding: 0
     box-sizing: border-box;
 }
 
@@ -42,7 +37,7 @@ body {
     font-weight: 800 !important;
 }
 
-/* ─── Accent Helpers ─── */
+/* Accent Helpers */
 .text-accent {
     color: var(--accent) !important;
 }
@@ -70,7 +65,7 @@ body {
     box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
 }
 
-/* ─── Glass Card ─── */
+/* Glass Card */
 .glass-card {
     background: var(--bg-card);
     backdrop-filter: blur(12px);
@@ -83,7 +78,7 @@ body {
     box-shadow: var(--shadow-md);
 }
 
-/* ─── Navbar ─── */
+/* Navbar */
 #mainNavbar {
     background: var(--bg-navbar);
     backdrop-filter: blur(20px);
@@ -110,7 +105,7 @@ body {
     background: rgba(99, 102, 241, 0.06);
 }
 
-/* ─── Hero Section ─── */
+/* Hero Section */
 .hero-section {
     background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #312e81 100%);
     padding: 5rem 0 6rem;
@@ -230,7 +225,7 @@ body {
     animation: float 6s ease-in-out infinite 3s;
 }
 
-/* ─── Features Section ─── */
+/* Features Section */
 .feature-card {
     background: var(--bg-card);
     border-radius: var(--radius);
@@ -255,7 +250,7 @@ body {
     font-size: 1.5rem;
 }
 
-/* ─── Stats Section ─── */
+/* Stats Section */
 .stats-section {
     background: linear-gradient(135deg, #1e1b4b, #312e81);
     border-radius: 0;
@@ -265,7 +260,7 @@ body {
     padding: 1.5rem;
 }
 
-/* ─── Auth Pages ─── */
+/* Auth Pages */
 .auth-section {
     min-height: calc(100vh - 200px);
     display: flex;
@@ -297,7 +292,7 @@ body {
     margin: 0 auto;
 }
 
-/* ─── Forms ─── */
+/* Forms */
 .form-control,
 .form-select {
     border: 2px solid var(--border-color);
@@ -318,7 +313,7 @@ body {
     font-size: 1rem;
 }
 
-/* ─── Dashboard ─── */
+/* Dashboard */
 .stat-card {
     transition: transform 0.2s ease;
 }
@@ -337,7 +332,7 @@ body {
     font-size: 1.3rem;
 }
 
-/* ─── Sentiment Badge ─── */
+/* Sentiment Badge */
 .sentiment-badge {
     font-size: 0.8rem;
     font-weight: 600;
@@ -346,7 +341,7 @@ body {
     background: rgba(0, 0, 0, 0.04);
 }
 
-/* ─── Complaint Cards ─── */
+/* Complaint Cards */
 .complaint-card {
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
@@ -372,7 +367,7 @@ body {
     word-wrap: break-word;
 }
 
-/* ─── AI Suggestion Box ─── */
+/* AI Suggestion Box */
 .ai-suggestion-box {
     background: linear-gradient(135deg, rgba(99, 102, 241, 0.06), rgba(168, 85, 247, 0.06));
     border: 1px solid rgba(99, 102, 241, 0.15);
@@ -392,7 +387,7 @@ body {
     }
 }
 
-/* ─── Reply Items ─── */
+/* Reply Items */
 .reply-item {
     background: rgba(0, 0, 0, 0.02);
     border: 1px solid var(--border-color);
@@ -403,7 +398,7 @@ body {
     border-color: rgba(99, 102, 241, 0.15);
 }
 
-/* ─── Table ─── */
+/* Table */
 .table {
     --bs-table-hover-bg: rgba(99, 102, 241, 0.04);
 }
@@ -415,19 +410,19 @@ body {
     font-size: 0.75rem;
 }
 
-/* ─── Footer ─── */
+/* Footer */
 #mainFooter {
     background: #f8f9fa;
     border-top: 1px solid var(--border-color);
 }
 
-/* ─── Charts ─── */
+/* Charts */
 canvas {
     max-width: 100%;
     max-height: 180px;
 }
 
-/* ─── Dashboard Layout ─── */
+/* Dashboard Layout */
 .dashboard-section {
     text-align: justify;
 }
@@ -440,7 +435,7 @@ canvas {
     font-size: 1.6rem;
 }
 
-/* ─── Scrollbar ─── */
+/* Scrollbar */
 ::-webkit-scrollbar {
     width: 8px;
 }
@@ -458,7 +453,7 @@ canvas {
     background: rgba(0, 0, 0, 0.25);
 }
 
-/* ─── Responsive Tweaks ─── */
+/* Responsive Tweaks */
 @media (max-width: 768px) {
     .hero-section {
         padding: 3rem 0 4rem;
@@ -478,7 +473,7 @@ canvas {
     }
 }
 
-/* ─── Animations ─── */
+/* Animations */
 .card,
 .btn {
     transition: all 0.2s ease;

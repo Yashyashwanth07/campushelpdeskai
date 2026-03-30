@@ -1,10 +1,10 @@
+#ai_helper.py
 import requests
 import json
 from config import Config
 
 
 def _call_llama(system_prompt, user_prompt):
-    """Make a call to the AI model via Together AI API."""
     headers = {
         'Authorization': f'Bearer {Config.TOGETHER_API_KEY}',
         'Content-Type': 'application/json'

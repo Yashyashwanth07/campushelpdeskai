@@ -34,9 +34,6 @@ def allowed_file(filename):
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-
-# ─────────────────────────── PUBLIC ROUTES ───────────────────────────
-
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -108,7 +105,7 @@ def logout():
     return redirect(url_for('index'))
 
 
-# ─────────────────────────── STUDENT ROUTES ───────────────────────────
+# STUDENT ROUTES
 
 @app.route('/complaint/new', methods=['GET', 'POST'])
 @login_required
@@ -198,7 +195,7 @@ def complaint_detail(complaint_id):
     return render_template('complaint_detail.html', complaint=complaint)
 
 
-# ─────────────────────────── ADMIN ROUTES ───────────────────────────
+# ADMIN ROUTES
 
 @app.route('/dashboard')
 @login_required
@@ -293,7 +290,7 @@ def update_status(complaint_id):
     return redirect(url_for('complaint_detail', complaint_id=complaint_id))
 
 
-# ─────────────────────────── AI API ROUTES ───────────────────────────
+# AI API ROUTES
 
 @app.route('/api/ai-suggest', methods=['POST'])
 @login_required
@@ -322,7 +319,6 @@ def ai_reply():
 
     reply_text = generate_reply(complaint.title, complaint.description, complaint.department)
 
-    # Return AI reply text for admin to review before sending
     return jsonify({'reply': reply_text})
 
 
@@ -341,14 +337,12 @@ def ai_summary():
     if not current_user.is_admin():
         return jsonify({'error': 'Access denied'}), 403
 
-    # Get this week's complaints
     week_ago = datetime.now() - timedelta(days=7)
     complaints = Complaint.query.filter(Complaint.created_at >= week_ago).all()
 
     if not complaints:
         return jsonify({'summary': 'No complaints received this week.'})
 
-    # Build data string for AI
     complaints_text = ""
     for c in complaints:
         complaints_text += (
@@ -359,13 +353,12 @@ def ai_summary():
     return jsonify({'summary': summary})
 
 
-# ─────────────────────────── INIT ───────────────────────────
+# Admin
 
 def create_tables():
     """Create database tables and default admin account."""
     db.create_all()
 
-    # Create default admin if not exists
     admin = User.query.filter_by(email='admin@smartcampus.com').first()
     if not admin:
         admin = User(name='Admin', email='admin@smartcampus.com', role='admin')

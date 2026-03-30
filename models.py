@@ -36,8 +36,8 @@ class Complaint(db.Model):
     title = db.Column(db.String(200), nullable=False)
     description = db.Column(db.Text, nullable=False)
     department = db.Column(db.String(50), nullable=False)
-    status = db.Column(db.String(20), default='Pending')  # Pending, In Progress, Resolved
-    sentiment = db.Column(db.String(20), default='Neutral')  # Urgent, Neutral, Positive
+    status = db.Column(db.String(20), default='Pending') 
+    sentiment = db.Column(db.String(20), default='Neutral')  
     attachment = db.Column(db.String(256), nullable=True)
     hidden_by_user = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=datetime.now)

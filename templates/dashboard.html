@@ -215,7 +215,6 @@
 
 {% block extra_js %}
 <script>
-    // Chart data from Flask
     const deptLabels = {{ dept_labels| tojson }};
     const deptCounts = {{ dept_counts| tojson }};
     const trendLabels = {{ trend_labels| tojson }};
