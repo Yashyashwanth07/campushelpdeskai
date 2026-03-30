@@ -1,7 +1,0 @@
-.gitignore
-venv/
-env/
-__pycache__/
-instance/
-*.db
-.pytest_cache/
